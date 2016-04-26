@@ -4,7 +4,7 @@
 
 ## 用意するもの（OSの標準装備のアプリケーションは割愛）
 Windows：VirtualBox, Vagrant, TeraTerm  
-Mac:Homebrew, VirtualBox, Vagrant
+Mac：Homebrew, VirtualBox, Vagrant
 
 
 ## 用語解説
