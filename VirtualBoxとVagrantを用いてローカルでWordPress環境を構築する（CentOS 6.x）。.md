@@ -1,18 +1,17 @@
 # VirtualBoxとVagrantを用いてローカルでWordPress環境を構築する（CentOS 6.x）。
 
-　講習会用の環境を、お手軽に手元で再現できるように情報を整理しました。構築方法が少々高度なので、わからない方は原口の方まで質問してください。
-　また、かなり荒い（特にFireWall周り。セキュリティ的には危険な）設定を施していますので、常用する場合は適切な設定を行ってください。
+　講習会用の環境を、お手軽に手元で再現できるように情報を整理しました。構築方法が少々高度なので、わからない方は原口の方まで質問してください。また、かなり荒い（特にFireWall周り。セキュリティ的には危険な）設定を施していますので、常用する場合は適切な設定を行ってください。
 
 ## 用意するもの（OSの標準装備のアプリケーションは割愛）
-Windows：VirtualBox, Vagrant, TeraTerm 
+Windows：VirtualBox, Vagrant, TeraTerm  
 Mac:Homebrew, VirtualBox, Vagrant
 
 
 ## 用語解説
 
-VirtualBox：OS（ホスト、自分のパソコン）内で仮想的にOS環境を構築するためのソフトウェア。
-Vagrant：開発環境の構築と共有を簡単に行うためのツール。本番環境での投入前に実験するための環境構築用ツールとして重宝される。
-TeraTerm：Windows向けのターミナルソフト。
+VirtualBox：OS（ホスト、自分のパソコン）内で仮想的にOS環境を構築するためのソフトウェア。  
+Vagrant：開発環境の構築と共有を簡単に行うためのツール。本番環境での投入前に実験するための環境構築用ツールとして重宝される。  
+TeraTerm：Windows向けのターミナルソフト。  
 Homebrew：Mac用のパッケージ管理ソフトウェア（Linuxで言う所のyumやrpmといったもの）。
 
 ## 手順（コマンドのみ列挙）
@@ -76,27 +75,27 @@ Homebrew：Mac用のパッケージ管理ソフトウェア（Linuxで言う所�
 
 ### 共通手順
 
-Step 1：コマンドプロンプトまたはターミナルで、以下のコマンドを入力します。
+##### Step 1：コマンドプロンプトまたはターミナルで、以下のコマンドを入力します。
 
 	vagrant box add CentOS65_64 https://github.com/2creatives/vagrant-centos/releases/download/v6.5.3/centos65-x86_64-20140116.box
 	vagrant box list
 
-Step 2：「CentOS65_64」という名前のBOXができていたら、以下のコマンドを入力します。
+##### Step 2：「CentOS65_64」という名前のBOXができていたら、以下のコマンドを入力します。
 
 	vagrant init CentOS65_64
 
 　vagrantのイニシャライズ（vagrant init CentOS65_64）が完了すると、先ほど作業用に作成したフォルダ内に「Vagrantfile」というファイルができています。
 
-Step 3：vagrantに関連するプラグインをインストールす。
+##### Step 3：vagrantに関連するプラグインをインストールす。
 
-vagrant plugin install vagrant-hostsupdater
-vagrant plugin install vagrant-vbguest
+vagrant plugin install vagrant-hostsupdater  
+vagrant plugin install vagrant-vbguest  
 
 　Windowsの場合は、TeraTerm用に以下のプラグインもインストールします。
 
-	vagrant plugin install vagrant-teraterm
+	vagrant plugin install vagrant-teraterm  
 
-Step 4：Vagrantファイルの設定を書き換える。
+##### Step 4：Vagrantファイルの設定を書き換える。
 
 　Vagrantfileをメモ帳やVi等のテキストエディタで開き、設定を変更します。
 
@@ -115,7 +114,7 @@ Step 4：Vagrantファイルの設定を書き換える。
 	config.vm.network "private_network", ip: "192.168.33.10"
 	config.vm.synced_folder ".", "/vagrant", owner: 'apache', group: 'apache', mount_options: ['dmode=755', 'fmode=644']
 
-Step 5：CentOSにログインする。
+##### Step 5：CentOSにログインする。
 
 　コマンドプロンプトまたはターミナルで、以下のコマンドを入力します。
 
@@ -128,7 +127,7 @@ Step 5：CentOSにログインする。
 
 　これでCentOSにログインができます。
 
-Step 6：パッケージ管理ソフトウェアを用いてバージョンアップする。
+##### Step 6：パッケージ管理ソフトウェアを用いてバージョンアップする。
 
 	yum -y check-update
 	sudo yum -y update --exclude=kernel* --exclude=centos*
@@ -137,7 +136,7 @@ Step 6：パッケージ管理ソフトウェアを用いてバージョンア�
 
 	cat /etc/issue
 
-Step 7：言語設定の確認をする。
+##### Step 7：言語設定の確認をする。
 
 	locale
 
@@ -153,7 +152,7 @@ Step 7：言語設定の確認をする。
 
 　Viで設定変更が可能になりますので、「en_US.UTF8」を「ja_JP.UTF8」に変更してください。変更したら、反映しているか確認するためにdateコマンドを打ち込んで、日本の日付で表示されているか確認してください。
 
-Step 8：Apacheのインストール
+##### Step 8：Apacheのインストール
 
 	yum search all apache | grep httpd
 	yum list | grep httpd
@@ -169,7 +168,7 @@ Step 8：Apacheのインストール
 	sudo service iptables stop
 	sudo chkconfig iptables off
 
-Step 9：ホスト（自分のコンピュータ）とゲスト（CentOS）のフォルダ同期設定
+##### Step 9：ホスト（自分のコンピュータ）とゲスト（CentOS）のフォルダ同期設定
 
 　ゲスト側で作成したHTMLファイル等をホスト側で編集可能にするために、フォルダの同期設定を行います。
 
@@ -177,7 +176,7 @@ Step 9：ホスト（自分のコンピュータ）とゲスト（CentOS）の�
 	sudo mv /var/www/html/ /var/www/html.old/
 	sudo ln -fs /vagrant/html/ /var/www/
 
-Step 10：PHPとMySQLのインストール
+##### Step 10：PHPとMySQLのインストール
 
 　PHPとMySQLをインストールします。その際、WordPressに適切なバージョンであるかを確認してください。もし適切なバージョンでない場合は、バージョン指定してそれぞれのソフトウェアをインストールする必要があります。
 
@@ -189,7 +188,7 @@ Step 10：PHPとMySQLのインストール
 	sudo service mysqld start
 	sudo chkconfig mysqld on
 
-Step 11：ブラウザでの動作確認。
+##### Step 11：ブラウザでの動作確認。
 
 　ホスト側のブラウザで動作確認を行います。以下のURLにアクセスしてください。
 
@@ -197,7 +196,7 @@ Step 11：ブラウザでの動作確認。
 
 　Apacheの初期設定画面が表示されたら成功です。
 
-Step 11：MySQLの設定
+##### Step 12：MySQLの設定
 
 　初期設定ではrootにパスワードがかかっていないので、パスワード設定を行います。以下のコマンドを入力したら、指示に従って設定を行ってください。最初のパスワードを聞かれたら、エンターキーを押してください（パスワードがかかっていないので、何も入力する必要なし）。
 
@@ -216,7 +215,7 @@ Step 11：MySQLの設定
 	flush privileges;
 	exit
 
-Step 12：WordPressのインストール
+##### Step 13：WordPressのインストール
 
 　以下のコマンドを入力します。
 
@@ -235,7 +234,7 @@ Step 12：WordPressのインストール
 
 	sudo service httpd restart
 
-Step 13：ブラウザでのWordPress設定
+##### Step 14：ブラウザでのWordPress設定
 　以下のURLにアクセスします。
 
 	http://192.168.33.10/wordpress/wp-admin/index.php
@@ -279,13 +278,13 @@ Step 13：ブラウザでのWordPress設定
 	define('LOGGED_IN_SALT',   'put your unique phrase here');
 	define('NONCE_SALT',       'put your unique phrase here');
 
-Step 13：phpMyAdminのインストール
+##### Step 15：phpMyAdminのインストール
 
 	sudo yum -y install phpmyadmin
 
 
-　phpMyAdminのインストールが完了したら、設定ファイルを修正します。以下のコマンドを入力後、以下の情報を見比べて記載内容を修正してください。
-　1つ目：phpMyAdmin.confの設定
+　phpMyAdminのインストールが完了したら、設定ファイルを修正します。以下のコマンドを入力後、以下の情報を見比べて記載内容を修正してください。  
+　**1つ目：phpMyAdmin.confの設定**
 
 	sudo vi /etc/httpd/conf.d/phpMyAdmin.conf
 	
@@ -306,14 +305,14 @@ Step 13：phpMyAdminのインストール
 	</Directory>
 
 
-　2つ目：config.inc.phpの設定
+　**2つ目：config.inc.phpの設定**
 
 	$cfg['Servers'][$i]['AllowNoPassword']              // Allow logins without a password. Do not change the FALSE
                                      = FALSE;
 
 　このFALSEの箇所を、TRUEに変えてください。
 
-　3つ目：httpd.confの設定
+　**3つ目：httpd.confの設定**
 
 	EnableSendfile off　のコメント（;）を外す。
 	「AllowOverride None」の「None」を「All」にする。
@@ -323,7 +322,7 @@ Step 13：phpMyAdminのインストール
 
 	sudo service httpd restart
 
-Step 14：phpMyAdminの起動確認
+##### Step 16：phpMyAdminの起動確認
 　
 　以下のURLにアクセスして、MySQLで作成したアカウントとパスワードを用いてログインしてください。ログインできたら成功です。
 
@@ -336,8 +335,8 @@ https://wpdocs.osdn.jp/WordPress_の安全性を高める
 
 
 ## 色々なツール
-nmap：ポート確認など
-iLogScanner：ウェブサイトの攻撃兆候検出ツール
-ApacheLogViewer：Apache（Webアクセス）のログビューア
-wireshark：パケットキャプチャソフトウェア
+nmap：ポート確認など  
+iLogScanner：ウェブサイトの攻撃兆候検出ツール  
+ApacheLogViewer：Apache（Webアクセス）のログビューア  
+wireshark：パケットキャプチャソフトウェア  
 visitors：Mac/Linux用のApacheLogViewer
